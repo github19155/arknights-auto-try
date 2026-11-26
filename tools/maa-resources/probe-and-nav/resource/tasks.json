@@ -1,0 +1,302 @@
+{
+  "RecoveryScreenCheck": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["RecoveryEndOfAction", "RecoveryMissionFailed", "RecoveryStoryConfirm", "RecoveryStory", "MarkRecoveryOther"]
+  },
+  "RecoveryEndOfAction": {
+    "baseTask": "EndOfAction",
+    "template": "Battle/BattleFlag/EndOfAction.png",
+    "action": "DoNothing",
+    "next": ["MarkRecoveryResult"]
+  },
+  "RecoveryMissionFailed": {
+    "baseTask": "FightMissionFailed",
+    "action": "DoNothing",
+    "preDelay": 0,
+    "next": ["MarkRecoveryResult"],
+    "onErrorNext": [],
+    "exceededNext": []
+  },
+  "RecoveryStoryConfirm": {
+    "baseTask": "SkipThePreBattlePlotConfirm",
+    "template": "Battle/Plot/SkipThePreBattlePlotConfirm.png",
+    "action": "DoNothing",
+    "next": ["MarkRecoveryStory"]
+  },
+  "RecoveryStory": {
+    "baseTask": "SkipThePreBattlePlot",
+    "template": "Battle/Plot/SkipThePreBattlePlot.png",
+    "action": "DoNothing",
+    "next": ["MarkRecoveryStory"]
+  },
+  "MarkRecoveryResult": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkRecoveryStory": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkRecoveryOther": {"algorithm": "JustReturn", "action": "Stop"},
+  "ReturnButtons": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["ReturnButton", "MarkRecoveryNoReturn"]
+  },
+  "ReturnButton": {
+    "template": ["Return.png", "Return-White.png"],
+    "templThreshold": [0.7, 0.7],
+    "action": "ClickSelf",
+    "roi": [0, 0, 180, 80],
+    "postDelay": 800,
+    "next": ["ReturnConfirm", "MarkRecoveryReturned"],
+    "onErrorNext": []
+  },
+  "ReturnConfirm": {
+    "template": "PopupConfirm.png",
+    "action": "ClickSelf",
+    "roi": [630, 400, 650, 160],
+    "postDelay": 800,
+    "next": ["MarkRecoveryReturned"]
+  },
+  "MarkRecoveryReturned": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkRecoveryNoReturn": {"algorithm": "JustReturn", "action": "Stop"},
+  "ProbeRestoreNormal": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "普通难度",
+      "普通模式",
+      "标准模式"
+    ],
+    "roi": [
+      650,
+      600,
+      400,
+      120
+    ],
+    "action": "ClickSelf",
+    "postDelay": 1200,
+    "next": [
+      "ProbeConfirmStage"
+    ],
+    "onErrorNext": [
+      "ProbeConfirmStage"
+    ],
+    "maxTimes": 2,
+    "exceededNext": [
+      "ProbeConfirmStage"
+    ]
+  },
+  "ProbeConfirmStage": {
+    "algorithm": "OcrDetect",
+    "text": [],
+    "fullMatch": true,
+    "roi": [
+      780,
+      60,
+      500,
+      150
+    ],
+    "action": "DoNothing",
+    "next": [
+      "ProbeNormalUnavailable",
+      "ProbeNormalStar",
+      "MarkNormalNotDone"
+    ],
+    "onErrorNext": [
+      "MarkStageMissing"
+    ]
+  },
+  "ProbeNormalUnavailable": {
+    "baseTask": "UnableToAgent2",
+    "algorithm": "MatchTemplate",
+    "template": "Battle/UsePrts/UnableToAgent2.png",
+    "action": "DoNothing",
+    "next": [
+      "MarkNormalNotDone"
+    ],
+    "exceededNext": [],
+    "onErrorNext": [
+      "MarkStageMissing"
+    ]
+  },
+  "ProbeNormalStar": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "代理指挥"
+    ],
+    "roi": [
+      850,
+      490,
+      430,
+      150
+    ],
+    "action": "DoNothing",
+    "next": [
+      "MarkNormalDone"
+    ],
+    "onErrorNext": [
+      "MarkNormalNotDone"
+    ]
+  },
+  "ProbeSwitchChallenge": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "突袭模式"
+    ],
+    "roi": [
+      600,
+      600,
+      600,
+      120
+    ],
+    "action": "ClickSelf",
+    "postDelay": 1000,
+    "next": [
+      "ProbeChallengePanel"
+    ],
+    "onErrorNext": [
+      "MarkChallengeLocked"
+    ],
+    "exceededNext": [
+      "MarkChallengeLocked"
+    ]
+  },
+  "ProbeChallengeEntry": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [
+      "ProbeSwitchChallenge",
+      "ProbeChallengePanel",
+      "MarkChallengeLocked"
+    ]
+  },
+  "ProbeChallengePanel": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "普通难度",
+      "普通模式",
+      "标准模式"
+    ],
+    "roi": [
+      650,
+      600,
+      400,
+      120
+    ],
+    "action": "DoNothing",
+    "maxTimes": 5,
+    "next": [
+      "MarkChallengePanel"
+    ],
+    "exceededNext": [
+      "MarkChallengeLocked"
+    ],
+    "onErrorNext": [
+      "MarkChallengeLocked"
+    ]
+  },
+  "MarkNormalDone": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "MarkNormalNotDone": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "MarkChallengeLocked": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "MarkChallengeNotDone": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "MarkChallengeDone": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "ProbeCheck": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "maxTimes": 3,
+    "next": [
+      "ProbeHasStartButton",
+      "ProbeClickStage"
+    ],
+    "exceededNext": [
+      "MarkStageMissing"
+    ]
+  },
+  "ProbeClickStage": {
+    "algorithm": "OcrDetect",
+    "text": [],
+    "fullMatch": true,
+    "roi": [
+      0,
+      0,
+      1280,
+      720
+    ],
+    "action": "ClickSelf",
+    "postDelay": 1200,
+    "maxTimes": 3,
+    "next": [
+      "ProbeHasStartButton"
+    ],
+    "exceededNext": [
+      "MarkStageMissing"
+    ],
+    "onErrorNext": [
+      "MarkStageMissing"
+    ]
+  },
+  "MarkStageMissing": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "MarkChallengePanel": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  },
+  "ProbeFirstDropCheck": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "首次掉落"
+    ],
+    "roi": [
+      780,
+      150,
+      500,
+      570
+    ],
+    "action": "DoNothing",
+    "maxTimes": 3,
+    "next": [
+      "MarkChallengeNotDone"
+    ],
+    "onErrorNext": [
+      "MarkChallengeNotDone"
+    ]
+  },
+  "ProbeHasStartButton": {
+    "algorithm": "OcrDetect",
+    "text": [
+      "开始行动",
+      "开始突袭",
+      "开始作战"
+    ],
+    "roi": [
+      1000,
+      600,
+      280,
+      120
+    ],
+    "action": "DoNothing",
+    "preDelay": 100,
+    "postDelay": 100,
+    "maxTimes": 20,
+    "next": [
+      "ProbeRestoreNormal",
+      "ProbeConfirmStage"
+    ],
+    "exceededNext": [
+      "MarkStageMissing"
+    ]
+  }
+}

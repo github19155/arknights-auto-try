@@ -1,0 +1,16 @@
+{
+  "BattleReadyCheck": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["BattleReadyButton", "MarkNotAtPanel"]
+  },
+  "BattleReadyButton": {
+    "algorithm": "OcrDetect",
+    "text": ["开始行动", "开始突袭", "开始作战", "演习"],
+    "roi": [940, 560, 340, 160],
+    "action": "DoNothing",
+    "next": ["MarkAtPanel"]
+  },
+  "MarkAtPanel": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNotAtPanel": {"algorithm": "JustReturn", "action": "Stop"}
+}

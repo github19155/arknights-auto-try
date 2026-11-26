@@ -1,0 +1,15 @@
+{
+  "BattleStartPre": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [],
+    "preDelay": 0,
+    "postDelay": 0
+  },
+  "BattleStartAll": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [],
+    "onErrorNext": []
+  }
+}

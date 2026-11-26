@@ -1,0 +1,83 @@
+{
+  "StorySkipPre": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["SkipThePreBattlePlotConfirm", "SkipThePreBattlePlot", "EndOfPlot", "StoryWaitPre"]
+  },
+  "SkipThePreBattlePlot": {
+    "algorithm": "MatchTemplate",
+    "template": "Battle/Plot/SkipThePreBattlePlot.png",
+    "action": "ClickSelf",
+    "roi": [1096, 0, 182, 131],
+    "maskRange": [100, 255],
+    "postDelay": 500,
+    "maxTimes": 5,
+    "next": ["SkipThePreBattlePlotConfirm", "EndOfPlot", "StoryWaitPre"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "SkipThePreBattlePlotConfirm": {
+    "algorithm": "MatchTemplate",
+    "template": "Battle/Plot/SkipThePreBattlePlotConfirm.png",
+    "action": "ClickSelf",
+    "roi": [721, 290, 149, 244],
+    "maskRange": [35, 255],
+    "postDelay": 800,
+    "maxTimes": 5,
+    "next": ["EndOfPlot", "SkipThePreBattlePlot", "StoryWaitPre"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "StoryWaitPre": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "postDelay": 500,
+    "maxTimes": 30,
+    "next": ["SkipThePreBattlePlotConfirm", "SkipThePreBattlePlot", "EndOfPlot", "StoryWaitPre"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "StorySkipPost": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["SkipBattlePlotConfirm", "SkipBattlePlot", "EndOfPlot", "StoryWaitPost"]
+  },
+  "SkipBattlePlot": {
+    "algorithm": "MatchTemplate",
+    "template": "Battle/Plot/SkipThePreBattlePlot.png",
+    "action": "ClickSelf",
+    "roi": [1096, 0, 182, 131],
+    "maskRange": [100, 255],
+    "postDelay": 500,
+    "maxTimes": 5,
+    "next": ["SkipBattlePlotConfirm", "EndOfPlot", "StoryWaitPost"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "SkipBattlePlotConfirm": {
+    "algorithm": "MatchTemplate",
+    "template": "Battle/Plot/SkipThePreBattlePlotConfirm.png",
+    "action": "ClickSelf",
+    "roi": [721, 290, 149, 244],
+    "maskRange": [35, 255],
+    "postDelay": 800,
+    "maxTimes": 5,
+    "next": ["EndOfPlot", "SkipBattlePlot", "StoryWaitPost"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "StoryWaitPost": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "postDelay": 500,
+    "maxTimes": 30,
+    "next": ["SkipBattlePlotConfirm", "SkipBattlePlot", "EndOfPlot", "StoryWaitPost"],
+    "exceededNext": ["MarkStoryRetryLimit"]
+  },
+  "EndOfPlot": {
+    "algorithm": "MatchTemplate",
+    "template": "Battle/Plot/EndOfPlot.png",
+    "roi": [520, 0, 243, 206],
+    "action": "DoNothing",
+    "next": []
+  },
+  "MarkStoryRetryLimit": {
+    "algorithm": "JustReturn",
+    "action": "Stop"
+  }
+}

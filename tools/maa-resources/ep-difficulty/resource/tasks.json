@@ -1,0 +1,99 @@
+{
+  "EpDifficultyProbe": {
+    "Docs": "只读难度识别：险地用 MAA 原生 NormalDifficulty-Chapter15 模板，磨难/标准用难度控件文字 OCR。",
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [
+      "EpDifficultyHazardActive",
+      "EpDifficultyToughActive",
+      "EpDifficultyStandardActive",
+      "MarkEpDifficultyUnknown"
+    ]
+  },
+  "EpDifficultyHazardActive": {
+    "Docs": "按钮显示「切回常规」= 当前已在险地；直接使用已加载的 MAA 原生模板。",
+    "template": ["StageNavigation/Episode/NormalDifficulty-Chapter15.png"],
+    "templThreshold": 0.8,
+    "maskRange": [0, 220],
+    "roi": [600, 610, 130, 110],
+    "action": "DoNothing",
+    "next": ["MarkEpDifficultyHazard"]
+  },
+  "EpDifficultyToughActive": {
+    "Docs": "9~14 章磨难没有可用模板，改识别左下难度控件上的「磨难」文字。",
+    "algorithm": "OcrDetect",
+    "text": ["磨难"],
+    "roi": [0, 540, 1280, 180],
+    "action": "DoNothing",
+    "next": ["MarkEpDifficultyTough"]
+  },
+  "EpDifficultyStandardActive": {
+    "Docs": "标准模式的文字识别，用来证明当前不是磨难/险地。",
+    "algorithm": "OcrDetect",
+    "text": ["标准"],
+    "roi": [0, 540, 1280, 180],
+    "action": "DoNothing",
+    "next": ["MarkEpDifficultyStandard"]
+  },
+  "MarkEpDifficultyHazard": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkEpDifficultyTough": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkEpDifficultyStandard": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkEpDifficultyUnknown": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkEpDifficultyLost": {"algorithm": "JustReturn", "action": "Stop"},
+
+  "EpDifficultyTuningTough": {
+    "Docs": "9~14 章磨难：复用原生 LevelOfDifficulty 点开难度控件，再复用原生 EnterChapterDifficultyHard 点右侧「进入作战」。",
+    "baseTask": "LevelOfDifficulty",
+    "maxTimes": 5,
+    "exceededNext": ["MarkEpDifficultyLost"],
+    "next": ["EpDifficultyEnterTough", "MarkEpDifficultyLost"]
+  },
+  "EpDifficultyEnterTough": {
+    "Docs": "原生「进入作战」OCR 命中即磨难模式已进入，以此节点作为切难度成功的证据。",
+    "baseTask": "EnterChapterDifficultyHard",
+    "maxTimes": 3,
+    "exceededNext": ["MarkEpDifficultyLost"],
+    "next": []
+  },
+
+  "EpDifficultyHazard": {
+    "Docs": "15~17 章险地：先点难度切换按钮，再确认按钮已变成「切回常规」。",
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["EpDifficultySwitchHazard", "EpDifficultyHazardConfirm"]
+  },
+  "EpDifficultySwitchHazard": {
+    "Docs": "复用原生 ChangeToRaidDifficulty 的同位按钮，直接使用已加载的 MAA 原生模板。",
+    "template": ["StageNavigation/RaidDifficulty-Chapter15.png"],
+    "templThreshold": 0.8,
+    "maskRange": [0, 220],
+    "roi": [600, 610, 130, 110],
+    "action": "ClickSelf",
+    "postDelay": 800,
+    "maxTimes": 3,
+    "next": ["EpDifficultyHazardConfirm", "#self"],
+    "exceededNext": ["EpDifficultySwitchHazardOcr"]
+  },
+  "EpDifficultySwitchHazardOcr": {
+    "Docs": "模板没命中时退回按钮文字 OCR（险地）；再不行直接进入确认，由确认节点判定是否已经切换。",
+    "algorithm": "OcrDetect",
+    "text": ["险地"],
+    "roi": [560, 580, 260, 160],
+    "action": "ClickSelf",
+    "postDelay": 800,
+    "maxTimes": 3,
+    "next": ["EpDifficultyHazardConfirm"],
+    "exceededNext": ["EpDifficultyHazardConfirm"]
+  },
+  "EpDifficultyHazardConfirm": {
+    "Docs": "按钮变成「切回常规」模板 = 险地已生效；否则 MarkEpDifficultyLost 让调用方显式失败。",
+    "template": ["StageNavigation/Episode/NormalDifficulty-Chapter15.png"],
+    "templThreshold": 0.8,
+    "maskRange": [0, 220],
+    "roi": [600, 610, 130, 110],
+    "action": "DoNothing",
+    "maxTimes": 3,
+    "next": ["MarkEpDifficultyHazard"],
+    "exceededNext": ["MarkEpDifficultyLost"]
+  }
+}

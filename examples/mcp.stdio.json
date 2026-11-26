@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "arknights-auto-try": {
+      "command": "C:/path/to/arknights-auto-try/.venv/Scripts/python.exe",
+      "args": ["C:/path/to/arknights-auto-try/mcp_server.py"],
+      "env": {
+        "MAA_DIR": "C:/path/to/MAA",
+        "MAA_ADB": "C:/path/to/adb.exe",
+        "MAA_SERIAL": "<adb-device-serial>"
+      }
+    }
+  }
+}

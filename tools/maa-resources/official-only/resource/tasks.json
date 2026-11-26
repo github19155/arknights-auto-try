@@ -1,0 +1,43 @@
+{
+  "UseMedicine": {"algorithm": "JustReturn", "action": "Stop"},
+  "MedicineConfirm": {"algorithm": "JustReturn", "action": "Stop"},
+  "UseStone": {"algorithm": "JustReturn", "action": "Stop"},
+  "StoneConfirm": {"algorithm": "JustReturn", "action": "Stop"},
+  "SanityGuardEntry": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["SanityGuard", "MarkSanityOk"]
+  },
+  "SanityGuard": {
+    "algorithm": "OcrDetect",
+    "text": ["理智不足", "理智不足，是否使用", "恢复理智"],
+    "roi": [0, 0, 1280, 720],
+    "action": "DoNothing",
+    "next": ["MarkSanityExhausted"]
+  },
+  "MarkSanityExhausted": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkSanityOk": {"algorithm": "JustReturn", "action": "Stop"},
+  "BattleStartPre": {
+    "algorithm": "OcrDetect",
+    "text": ["开始行动", "开始突袭"],
+    "ocrReplace": [["干始", "开始"]],
+    "roi": [995, 590, 290, 140],
+    "action": "ClickSelf",
+    "preDelay": 500,
+    "postDelay": 1500
+  },
+  "BattleStartAll": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["BattleStartPlan"],
+    "onErrorNext": []
+  },
+  "BattleStartPlan": {
+    "algorithm": "OcrDetect",
+    "text": ["开始", "行动"],
+    "roi": [990, 280, 290, 260],
+    "action": "ClickSelf",
+    "postDelay": 3000,
+    "next": ["BattleOfficiallyBegin", "SkipThePreBattlePlot", "Stop"]
+  }
+}

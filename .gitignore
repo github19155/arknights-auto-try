@@ -1,0 +1,30 @@
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local runtime data, downloaded resources and personal plans
+/data/
+/squads/
+/maa/
+/tools/maa-resources/abandon-battle/resource/template/
+
+# Local credentials, client settings and editor state
+.env
+.env.*
+!.env.example
+.omp/
+.vscode/
+.idea/
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db

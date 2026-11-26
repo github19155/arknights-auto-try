@@ -1,0 +1,17 @@
+{
+  "BattleStartPre": {
+    "algorithm": "OcrDetect",
+    "text": ["演习"],
+    "roi": [860, 600, 240, 120],
+    "action": "ClickSelf",
+    "preDelay": 500,
+    "postDelay": 2000
+  },
+  "BattleStartAll": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [
+      "BattleStartOCR"
+    ]
+  }
+}

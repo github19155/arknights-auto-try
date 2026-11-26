@@ -1,0 +1,29 @@
+name: offline-tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  offline-tests:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      INTEL_ACCESS_ONLINE: "0"
+      # 测试与断言消息含中文；Windows runner 默认控制台编码未必能编码，固定 UTF-8
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.lock
+
+      - name: Run offline unit tests
+        run: python -m unittest discover -s tests -p "test_*.py"

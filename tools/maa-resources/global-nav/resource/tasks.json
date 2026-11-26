@@ -1,0 +1,157 @@
+{
+  "NavScreenProbe": {
+    "Docs": "只读画面判定：只识别不点击，顺序从最特定到最通用，命中即 Mark*Stop。",
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": [
+      "NavScreenResult",
+      "NavScreenStory",
+      "NavScreenPanel",
+      "NavScreenTerminal",
+      "NavScreenActivity",
+      "NavScreenMain",
+      "MarkNavScreenUnknown"
+    ]
+  },
+  "NavScreenResult": {
+    "Docs": "结算页：复用原生 EndOfAction 模板，不触发 StageDrops 插件。",
+    "baseTask": "EndOfAction",
+    "template": "Battle/BattleFlag/EndOfAction.png",
+    "action": "DoNothing",
+    "next": ["MarkNavScreenResult"]
+  },
+  "NavScreenStory": {
+    "Docs": "剧情页：显式复用原生 SkipThePreBattlePlot 模板，只识别不点击；不写死文件名。",
+    "baseTask": "SkipThePreBattlePlot",
+    "template": "Battle/Plot/SkipThePreBattlePlot.png",
+    "action": "DoNothing",
+    "next": ["MarkNavScreenStory"]
+  },
+  "NavScreenPanel": {
+    "Docs": "关卡详情面板：开始按钮文字是面板最稳定的标志。",
+    "algorithm": "OcrDetect",
+    "text": ["开始行动", "开始突袭", "开始作战", "演习", "开始推演"],
+    "roi": [940, 560, 340, 160],
+    "action": "DoNothing",
+    "next": ["MarkNavScreenPanel"]
+  },
+  "NavScreenActivity": {
+    "Docs": "插曲/别传/往期活动页签文字；页签若改成纯图标这里会退化成 unknown，由归位轮询兜底。",
+    "algorithm": "OcrDetect",
+    "text": ["插曲", "别传", "往期活动"],
+    "roi": [0, 540, 1280, 180],
+    "action": "DoNothing",
+    "next": ["MarkNavScreenActivity"]
+  },
+  "NavScreenTerminal": {
+    "Docs": "复用原生 GoTerminalStopflag（资源关卡图标 = 在终端）。",
+    "baseTask": "GoTerminalStopflag",
+    "template": "StageResource.png",
+    "action": "DoNothing",
+    "next": ["MarkNavScreenTerminal"]
+  },
+  "NavScreenMain": {
+    "Docs": "主界面：复用原生 StartUp 的界面标志模板。",
+    "algorithm": "MatchTemplate",
+    "template": ["SwitchTheme@ToggleSettingsMenu.png", "SwitchTheme@ToggleSettingsMenu-v2.png"],
+    "roi": [227, 327, 159, 152],
+    "action": "DoNothing",
+    "next": ["MarkNavScreenMain"]
+  },
+  "MarkNavScreenResult": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenStory": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenPanel": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenActivity": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenTerminal": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenMain": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavScreenUnknown": {"algorithm": "JustReturn", "action": "Stop"},
+
+  "NavGoTerminal": {
+    "Docs": "复用原生 Fight 节点：主界面标志 + Terminal-Entry 子任务点终端页签，再等页面稳定。",
+    "baseTask": "Fight",
+    "template": ["SwitchTheme@ToggleSettingsMenu.png", "SwitchTheme@ToggleSettingsMenu-v2.png"],
+    "action": "DoNothing",
+    "postDelay": 1500,
+    "next": []
+  },
+
+  "NavResourceTab": {
+    "Docs": "复用原生 StageResource（资源关卡页签）。",
+    "baseTask": "StageResource",
+    "template": "StageResource.png",
+    "action": "ClickSelf",
+    "postDelay": 1500,
+    "next": []
+  },
+  "NavAnnihilationMenu": {
+    "Docs": "剿灭入口没有原生模板，退回终端页签文字 OCR。",
+    "algorithm": "OcrDetect",
+    "text": ["剿灭作战", "剿灭"],
+    "roi": [0, 540, 1280, 180],
+    "action": "ClickSelf",
+    "postDelay": 1500,
+    "next": []
+  },
+  "NavAnnihilationTab": {
+    "Docs": "复用原生 AnnihilationStage；text 在运行期按关卡中文名注入（同 Chernobog@AnnihilationStage）。",
+    "baseTask": "AnnihilationStage",
+    "text": [],
+    "roi": [721, 22, 529, 693],
+    "action": "ClickSelf",
+    "postDelay": 1200,
+    "next": []
+  },
+
+  "NavStageSearch": {
+    "Docs": "复用原生关卡扫描：先识别代号点击，识别不到就左滑继续找。",
+    "baseTask": "StageNavigationBegin",
+    "next": ["NavStageCode", "FullStageNavigation"]
+  },
+  "NavStageCode": {
+    "Docs": "复用原生 ClickStageName；text 在运行期注入目标代号，整串匹配避免 TL-1 命中 TL-10。",
+    "baseTask": "ClickStageName",
+    "text": [],
+    "fullMatch": true,
+    "next": ["NavStageCodeOrSwipe", "#self"]
+  },
+  "NavStageCodeOrSwipe": {
+    "Docs": "复用原生 ClickedCorrectStageOrSwipe（开始按钮 flag + 标题复核）。",
+    "baseTask": "ClickedCorrectStageOrSwipe",
+    "action": "DoNothing",
+    "next": ["NavStageCodePanel", "FullStageNavigation"]
+  },
+  "NavStageCodePanel": {
+    "Docs": "复用原生 ClickedCorrectStage 的标题 ROI；fullMatch=false 容忍标题区装饰字，最终由 navigator 再校验一次。",
+    "baseTask": "ClickedCorrectStage",
+    "text": [],
+    "fullMatch": false,
+    "action": "DoNothing",
+    "next": ["MarkNavStageFound"]
+  },
+  "MarkNavStageFound": {"algorithm": "JustReturn", "action": "Stop"},
+
+  "NavBackAttempt": {
+    "Docs": "按一次左上角返回；当前画面没有返回按钮就 MarkNavBackMissing（这是答案，不是错误）。",
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "next": ["NavBack", "MarkNavBackMissing"]
+  },
+  "NavBack": {
+    "Docs": "左上角返回，模板与 probe-and-nav 的 ReturnButton 一致。",
+    "template": ["Return.png", "Return-White.png"],
+    "templThreshold": [0.7, 0.7],
+    "action": "ClickSelf",
+    "roi": [0, 0, 180, 80],
+    "postDelay": 800,
+    "maxTimes": 1,
+    "next": ["MarkNavBackClicked"]
+  },
+  "MarkNavBackClicked": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkNavBackMissing": {"algorithm": "JustReturn", "action": "Stop"},
+  "NavListSwipe": {
+    "Docs": "活动列表上滑一屏（复用原生 SlowlySwipeToTheUp）。",
+    "baseTask": "SlowlySwipeToTheUp",
+    "maxTimes": 1,
+    "next": []
+  }
+}

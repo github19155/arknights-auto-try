@@ -1,0 +1,21 @@
+{
+  "ResultFailedCheck": {
+    "algorithm": "OcrDetect",
+    "text": ["任务失败", "任務失敗"],
+    "roi": [0, 200, 700, 500],
+    "action": "DoNothing",
+    "maxTimes": 3,
+    "next": ["MarkBattleFailed"]
+  },
+  "ResultWinCheck": {
+    "algorithm": "OcrDetect",
+    "text": ["作战成功", "任務完成", "任务完成", "行动结束", "行動結束",
+             "行动结果", "行動結果"],
+    "roi": [0, 200, 900, 500],
+    "action": "DoNothing",
+    "maxTimes": 3,
+    "next": ["MarkBattleWon"]
+  },
+  "MarkBattleFailed": {"algorithm": "JustReturn", "action": "Stop"},
+  "MarkBattleWon": {"algorithm": "JustReturn", "action": "Stop"}
+}

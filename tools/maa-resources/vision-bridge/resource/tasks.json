@@ -1,0 +1,9 @@
+{
+  "FreshScreenshot": {
+    "algorithm": "JustReturn",
+    "action": "DoNothing",
+    "preDelay": 300,
+    "postDelay": 600,
+    "next": []
+  }
+}
